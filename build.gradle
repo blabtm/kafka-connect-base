@@ -1,0 +1,37 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+import org.json.JSONObject
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.json:json:20240303'
+    }
+}
+
+plugins {
+    id 'com.bmuschko.docker-remote-api' version '7.2.0'
+}
+
+docker {
+    var credentials = new JSONObject(file('credentials.json').text)
+
+    registryCredentials {
+        url = 'ghcr.io'
+        username = credentials.getString("username")
+        password = credentials.getString("password")
+    }
+}
+
+tasks.register('buildDockerImage', DockerBuildImage) {
+    inputDir = projectDir
+    images.add('ghcr.io/blabtm/kafka-connect-base:latest')
+}
+
+tasks.register('pushDockerImage', DockerPushImage) {
+    dependsOn buildDockerImage
+    images.add('ghcr.io/blabtm/kafka-connect-base:latest')
+}
