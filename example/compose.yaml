@@ -20,14 +20,13 @@ services:
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
 
   connect:
-    image: ghcr.io/blabtm/kafka-connect-base
+    image: ghcr.io/blabtm/kafka-connect-base:0.0.1
     networks:
       - blab
     ports:
-      - 8080:8080
+      - 8083:8083
     environment:
       - CONNECT_BOOTSTRAP_SERVERS=kafka:9092
-      - CONNECT_REST_PORT=8080
       - CONNECT_GROUP_ID=connect
       - CONNECT_CONFIG_STORAGE_TOPIC=connect-config
       - CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR=1
@@ -39,5 +38,6 @@ services:
       - CONNECT_VALUE_CONVERTER=org.apache.kafka.connect.converters.ByteArrayConverter
       - CONNECT_REST_ADVERTISED_HOST_NAME=localhost
       - CONNECT_PLUGIN_PATH=/usr/share/java
+      - CONNECT_PLUGINS=https://github.com/blabtm/kafka-connect-tcp/releases/download/0.0.1/kafka-connect-tcp-0.0.1-all.jar
     depends_on:
       - kafka

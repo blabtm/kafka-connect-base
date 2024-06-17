@@ -16,6 +16,8 @@ plugins {
     id 'com.bmuschko.docker-remote-api' version '7.2.0'
 }
 
+version = '0.0.1'
+
 docker {
     var credentials = new JSONObject(file('credentials.json').text)
 
@@ -28,10 +30,10 @@ docker {
 
 tasks.register('buildDockerImage', DockerBuildImage) {
     inputDir = projectDir
-    images.add('ghcr.io/blabtm/kafka-connect-base:latest')
+    images.add('ghcr.io/blabtm/kafka-connect-base:0.0.1')
 }
 
 tasks.register('pushDockerImage', DockerPushImage) {
     dependsOn buildDockerImage
-    images.add('ghcr.io/blabtm/kafka-connect-base:latest')
+    images.add('ghcr.io/blabtm/kafka-connect-base:0.0.1')
 }
