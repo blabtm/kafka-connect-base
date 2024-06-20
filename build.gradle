@@ -7,6 +7,10 @@ plugins {
 
 version = '0.0.1'
 
+ext {
+    image = "ghcr.io/blabtm/kafka-connect-base:$version"
+}
+
 repositories {
     mavenCentral()
 }
@@ -17,16 +21,14 @@ docker {
         username = "blabtm"
         password = System.getenv("TOKEN")
     }
-
-    println registryCredentials.password.get()
 }
 
 tasks.register('buildDockerImage', DockerBuildImage) {
     inputDir = projectDir
-    images.add('ghcr.io/blabtm/kafka-connect-base:0.0.1')
+    images.add(image)
 }
 
 tasks.register('pushDockerImage', DockerPushImage) {
     dependsOn buildDockerImage
-    images.add('ghcr.io/blabtm/kafka-connect-base:0.0.1')
+    images.add(image)
 }
